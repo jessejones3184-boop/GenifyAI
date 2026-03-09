@@ -1,0 +1,5 @@
+{
+  "name": "Genify Technolgies",
+  "description": "Genify is a luxury authentication service that uses Gemini AI image analysis to detect if items are real or fake.",
+  "requestFramePermissions": []
+}
