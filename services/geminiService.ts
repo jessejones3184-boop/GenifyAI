@@ -1,24 +1,25 @@
-
 import { GoogleGenAI, Type } from "@google/genai";
 import { AnalysisResult } from "../types";
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY! });
+// Use GEMINI_API_KEY as per guidelines
+const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY! });
 
-export const analyzeImageForensics = async (base64Image: string): Promise<AnalysisResult> => {
+export const analyzeLuxuryProduct = async (base64Image: string, productNotes?: string): Promise<AnalysisResult> => {
   const modelName = 'gemini-3-flash-preview';
   
   const prompt = `
-    You are a Senior Luxury Authentication Expert at Genify, the global leader in high-end asset verification.
-    Your objective is to perform a high-precision forensic audit on the provided image to identify if the luxury item (handbag, watch, sneaker, etc.) is authentic or a counterfeit/replica.
+    You are a Senior Luxury Authentication Expert at Genify.
+    Your objective is to perform a high-precision audit on the provided image to identify if the luxury item (handbag, watch, sneaker, etc.) is authentic or a counterfeit/replica.
     
+    ${productNotes ? `User Notes: ${productNotes}` : ''}
+
     Technical Analysis Protocol:
-    1. Material & Texture: Analyze fabric weave, leather grain, and stitching precision. Identify synthetic polymer structures vs authentic animal grains.
+    1. Material & Texture: Analyze fabric weave, leather grain, and stitching precision. Identify synthetic materials vs authentic grains.
     2. Hardware & Engraving: Examine logo font weight, engraving depth, and metallic alloy consistency.
     3. Construction: Look for structural integrity, edge paint quality, and alignment of patterns.
-    4. Batch & Serial: Check for font consistency in serial numbers or batch codes if visible.
-    5. Optical Reality: Verify if the item's details match the known standards of the specific luxury brand.
+    4. Optical Reality: Verify if the item's details match the known standards of the specific luxury brand.
 
-    Analyze with the precision required for high-end collectors and resale platforms (Grailed, StockX, etc.).
+    Analyze with the precision required for high-end collectors.
     Respond ONLY in a structured JSON format according to this schema.
   `;
 
@@ -36,22 +37,22 @@ export const analyzeImageForensics = async (base64Image: string): Promise<Analys
         responseSchema: {
           type: Type.OBJECT,
           properties: {
-            isAI: { type: Type.BOOLEAN, description: 'True if image is identified as synthetic or heavily modified' },
-            confidence: { type: Type.NUMBER, description: 'Forensic confidence score from 0.0 to 1.0' },
+            isAI: { type: Type.BOOLEAN, description: 'True if the item is identified as a counterfeit/fake' },
+            confidence: { type: Type.NUMBER, description: 'Authentication confidence score from 0.0 to 1.0' },
             detections: {
               type: Type.ARRAY,
               items: {
                 type: Type.OBJECT,
                 properties: {
-                  type: { type: Type.STRING, description: 'Technical name of the detection (e.g., FFT Artifact, Raytracing Mismatch)' },
-                  description: { type: Type.STRING, description: 'Detailed technical explanation' },
+                  type: { type: Type.STRING, description: 'Name of the detection (e.g., Stitching Irregularity, Logo Mismatch)' },
+                  description: { type: Type.STRING, description: 'Detailed explanation of the finding' },
                   severity: { type: Type.STRING, enum: ['low', 'medium', 'high'] }
                 },
                 required: ['type', 'description', 'severity']
               }
             },
-            verdict: { type: Type.STRING, description: 'Concise executive summary of the findings' },
-            forensicReport: { type: Type.STRING, description: 'Full technical forensic breakdown' }
+            verdict: { type: Type.STRING, description: 'Concise executive summary of the findings (Authentic vs Counterfeit)' },
+            forensicReport: { type: Type.STRING, description: 'Full technical breakdown of the authentication process' }
           },
           required: ['isAI', 'confidence', 'detections', 'verdict', 'forensicReport']
         }
@@ -61,7 +62,7 @@ export const analyzeImageForensics = async (base64Image: string): Promise<Analys
     const result = JSON.parse(response.text);
     return result;
   } catch (error) {
-    console.error("Optic Forensic Pipeline Error:", error);
-    throw new Error("Forensic analysis aborted. Input data may be corrupted or incompatible.");
+    console.error("Luxury Authentication Pipeline Error:", error);
+    throw new Error("Authentication analysis failed. The image may be unclear or the service is temporarily unavailable.");
   }
 };

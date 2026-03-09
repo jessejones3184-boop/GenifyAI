@@ -1,6 +1,6 @@
 
 import React, { useState, useRef } from 'react';
-import { analyzeImageForensics } from '../services/geminiService';
+import { analyzeLuxuryProduct } from '../services/geminiService';
 import { AnalysisResult } from '../types';
 
 const AnalysisTool: React.FC = () => {
@@ -36,7 +36,7 @@ const AnalysisTool: React.FC = () => {
         });
       }, 300);
 
-      const analysis = await analyzeImageForensics(preview);
+      const analysis = await analyzeLuxuryProduct(preview);
       
       clearInterval(timer);
       setProgress(100);

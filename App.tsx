@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
+import AnalysisTool from './components/AnalysisTool';
 import IntelligenceSection from './components/IntelligenceSection';
 import StatsSection from './components/StatsSection';
 import FAQ from './components/FAQ';
@@ -71,9 +72,9 @@ const App: React.FC = () => {
     }
   };
 
-  const handleInitializeAnalysis = (formData: any) => {
-    console.log('Analysis initialized with data:', formData);
-    alert('Analysis initialized! Our experts will review your submission and provide a report within 24 hours.');
+  const handleInitializeAnalysis = (data: any) => {
+    console.log('Analysis finalized with data:', data);
+    alert(`Analysis Complete! The forensic report has been saved to your account. Verdict: ${data.result.isAI ? 'Counterfeit' : 'Authentic'}`);
     setView('landing');
     setSelectedPlan(null);
   };
@@ -106,6 +107,15 @@ const App: React.FC = () => {
       <Navbar />
       <main className="flex-grow">
         <Hero />
+        <div id="demo-tool" className="py-20 bg-white">
+          <div className="max-w-7xl mx-auto px-6">
+            <div className="mb-16 text-center">
+              <span className="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-400 mb-4 block">Interactive Demo</span>
+              <h2 className="text-4xl md:text-5xl font-black tracking-tighter text-black uppercase">Try the AI Engine</h2>
+            </div>
+            <AnalysisTool />
+          </div>
+        </div>
         <IntelligenceSection />
         <StatsSection onSelectPlan={handleSelectPlan} />
         <FAQ />

@@ -25,10 +25,10 @@ const Hero: React.FC = () => {
         
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
           <button 
-            onClick={() => scrollToSection('pricing')}
+            onClick={() => scrollToSection('demo-tool')}
             className="w-full sm:w-auto bg-black text-white px-10 py-5 rounded-2xl font-black uppercase tracking-widest text-xs transition-all hover:bg-zinc-800"
           >
-            Start Authenticating
+            Try AI Demo
           </button>
           <button 
             onClick={() => scrollToSection('pricing')}
