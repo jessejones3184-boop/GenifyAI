@@ -28,13 +28,13 @@ const AboutPage: React.FC<AboutPageProps> = ({ setView }) => {
               <div className="space-y-6">
                 <p className="text-lg text-zinc-500 leading-relaxed font-medium">
                   Jesse came up with the idea after repeatedly getting scammed on Facebook for fakes. 
-                  Frustrated by the lack of accessible, high-accuracy verification tools for everyday collectors, 
+                  Frustrated by the lack of accessible, high accuracy verification tools for everyday collectors, 
                   he envisioned a world where anyone could authenticate luxury assets with microscopic clarity.
                 </p>
               </div>
               <div className="space-y-6">
                 <p className="text-lg text-zinc-500 leading-relaxed font-medium">
-                  Today, Genify stands as the industry leader in AI-driven forensic analysis, 
+                  Today, Genify stands as the industry leader in AI driven forensic analysis, 
                   providing 99.8% accurate detections for the world's most valuable products. 
                   Our mission is to eliminate counterfeit fraud and restore trust in the secondary market.
                 </p>

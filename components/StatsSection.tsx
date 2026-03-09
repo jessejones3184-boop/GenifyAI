@@ -24,7 +24,7 @@ const StatsSection: React.FC<StatsSectionProps> = ({ onSelectPlan }) => {
               <li className="text-zinc-500 text-sm">Basic Report (No Certificate)</li>
             </ul>
             <button 
-              onClick={() => onSelectPlan('demo', 'Demo Scan')}
+              onClick={() => onSelectPlan('demo', 'Interactive Demo')}
               className="w-full py-4 border border-zinc-200 rounded-full font-black uppercase tracking-widest text-[10px] text-black hover:bg-zinc-50 transition-all"
             >
               Get Started

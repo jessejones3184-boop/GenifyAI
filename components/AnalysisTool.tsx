@@ -76,7 +76,7 @@ const AnalysisTool: React.FC = () => {
             </div>
             <h3 className="text-2xl font-black text-black mb-2 tracking-tighter uppercase">Upload Asset</h3>
             <p className="text-zinc-400 text-[10px] font-black uppercase tracking-widest">
-              High-resolution forensic input
+              High resolution forensic input
             </p>
           </div>
         ) : (
