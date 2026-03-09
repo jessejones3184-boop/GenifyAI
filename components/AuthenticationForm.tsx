@@ -22,26 +22,16 @@ const AuthenticationForm: React.FC<AuthenticationFormProps> = ({ onBack, onIniti
 
   // Check for API key and free scan limit on mount
   React.useEffect(() => {
-    let apiKey = '';
-    try {
-      apiKey = (process as any)?.env?.GEMINI_API_KEY || (import.meta as any).env?.VITE_GEMINI_API_KEY;
-    } catch (e) {
-      apiKey = (import.meta as any).env?.VITE_GEMINI_API_KEY || '';
-    }
-
+    const apiKey = process.env.GEMINI_API_KEY || (import.meta as any).env?.VITE_GEMINI_API_KEY;
     if (!apiKey) {
-      setConfigError("GEMINI_API_KEY is not configured. Please add it to your environment variables and re-deploy.");
+      setConfigError("GEMINI_API_KEY is not configured. Please add it to your Netlify environment variables and trigger a new deploy (Clear cache and deploy).");
     }
 
     if (planName === 'Interactive Demo') {
-      try {
-        const freeScansUsed = localStorage.getItem('genify_free_scans_used');
-        if (freeScansUsed && parseInt(freeScansUsed) >= 1) {
-          alert("You have already used your one free authentication. Please purchase a plan to continue.");
-          onBack();
-        }
-      } catch (e) {
-        console.error("LocalStorage access failed", e);
+      const freeScansUsed = localStorage.getItem('genify_free_scans_used');
+      if (freeScansUsed && parseInt(freeScansUsed) >= 1) {
+        alert("You have already used your one free authentication. Please purchase a plan to continue.");
+        onBack();
       }
     }
   }, [planName, onBack]);
@@ -79,15 +69,11 @@ const AuthenticationForm: React.FC<AuthenticationFormProps> = ({ onBack, onIniti
 
     // Check for free scan limit
     if (planName === 'Interactive Demo') {
-      try {
-        const freeScansUsed = localStorage.getItem('genify_free_scans_used');
-        if (freeScansUsed && parseInt(freeScansUsed) >= 1) {
-          alert("You have already used your one free authentication. Please purchase a plan to continue.");
-          onBack();
-          return;
-        }
-      } catch (e) {
-        console.error("LocalStorage access failed", e);
+      const freeScansUsed = localStorage.getItem('genify_free_scans_used');
+      if (freeScansUsed && parseInt(freeScansUsed) >= 1) {
+        alert("You have already used your one free authentication. Please purchase a plan to continue.");
+        onBack();
+        return;
       }
     }
     
@@ -102,12 +88,8 @@ const AuthenticationForm: React.FC<AuthenticationFormProps> = ({ onBack, onIniti
 
       // Increment free scan count if applicable
       if (planName === 'Interactive Demo') {
-        try {
-          const currentCount = parseInt(localStorage.getItem('genify_free_scans_used') || '0');
-          localStorage.setItem('genify_free_scans_used', (currentCount + 1).toString());
-        } catch (e) {
-          console.error("LocalStorage write failed", e);
-        }
+        const currentCount = parseInt(localStorage.getItem('genify_free_scans_used') || '0');
+        localStorage.setItem('genify_free_scans_used', (currentCount + 1).toString());
       }
     } catch (error: any) {
       alert(error.message);

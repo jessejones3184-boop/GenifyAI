@@ -14,7 +14,7 @@ const App: React.FC = () => {
   const [view, setView] = useState<'landing' | 'auth' | 'about' | 'terms'>('landing');
   const [selectedPlan, setSelectedPlan] = useState<{ id: string; name: string } | null>(null);
 
-  const handleSelectPlan = React.useCallback((priceId: string, planName: string) => {
+  const handleSelectPlan = (priceId: string, planName: string) => {
     if (priceId === 'demo') {
       setSelectedPlan({ id: priceId, name: planName });
       setView('auth');
@@ -29,19 +29,14 @@ const App: React.FC = () => {
     } else if (priceId === 'professional') {
       window.location.href = "https://buy.stripe.com/3cI8wQaZ17RT1apgN5d7q01";
     }
-  }, []);
+  };
 
-  const handleInitializeAnalysis = React.useCallback((data: any) => {
+  const handleInitializeAnalysis = (data: any) => {
     console.log('Analysis finalized with data:', data);
     alert(`Analysis Complete! The forensic report has been saved to your account. Verdict: ${data.result.isAI ? 'Counterfeit' : 'Authentic'}`);
     setView('landing');
     setSelectedPlan(null);
-  }, []);
-
-  const handleBack = React.useCallback(() => {
-    setView('landing');
-    setSelectedPlan(null);
-  }, []);
+  };
 
   // Check for success URL parameter to show auth form after payment
   React.useEffect(() => {
@@ -68,7 +63,7 @@ const App: React.FC = () => {
     return (
       <AuthenticationForm 
         planName={selectedPlan.name}
-        onBack={handleBack}
+        onBack={() => setView('landing')}
         onInitialize={handleInitializeAnalysis}
       />
     );
