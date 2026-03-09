@@ -13,7 +13,7 @@ const App: React.FC = () => {
   const [view, setView] = useState<'landing' | 'auth'>('landing');
   const [selectedPlan, setSelectedPlan] = useState<{ id: string; name: string } | null>(null);
 
-  const handleSelectPlan = async (priceId: string, planName: string) => {
+  const handleSelectPlan = (priceId: string, planName: string) => {
     if (priceId === 'demo') {
       setSelectedPlan({ id: priceId, name: planName });
       setView('auth');
@@ -21,54 +21,12 @@ const App: React.FC = () => {
       return;
     }
 
-    // For paid plans, trigger Stripe Checkout immediately
-    try {
-      console.log('Initiating checkout for:', planName);
-      const response = await fetch('/api/create-checkout-session', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ 
-          priceId, 
-          planName,
-          origin: window.location.origin 
-        }),
-      });
-
-      if (!response.ok) {
-        let errorMessage = 'Failed to create checkout session';
-        try {
-          const contentType = response.headers.get('content-type');
-          if (contentType && contentType.includes('application/json')) {
-            const errorData = await response.json();
-            errorMessage = errorData.error || errorMessage;
-          } else {
-            const textError = await response.text();
-            errorMessage = `Server error (${response.status}): ${textError.slice(0, 100)}`;
-          }
-        } catch (e) {
-          errorMessage = `Network error: ${response.status} ${response.statusText}`;
-        }
-        throw new Error(errorMessage);
-      }
-
-      const contentType = response.headers.get('content-type');
-      if (!contentType || !contentType.includes('application/json')) {
-        const text = await response.text();
-        console.error('Expected JSON but got:', text.slice(0, 100));
-        throw new Error(`Server returned unexpected content type: ${contentType || 'unknown'}. This usually means the API route was missed.`);
-      }
-
-      const session = await response.json();
-      if (session.url) {
-        window.location.href = session.url;
-      } else {
-        throw new Error('No checkout URL returned from server');
-      }
-    } catch (error: any) {
-      console.error('Checkout error:', error);
-      alert(`Error: ${error.message}`);
+    // Use static Stripe Payment Links provided by user
+    // These open in the same tab (window.location.href)
+    if (priceId === 'single') {
+      window.location.href = "https://buy.stripe.com/28EfZiebd5JL8CR7cvd7q00";
+    } else if (priceId === 'professional') {
+      window.location.href = "https://buy.stripe.com/3cI8wQaZ17RT1apgN5d7q01";
     }
   };
 

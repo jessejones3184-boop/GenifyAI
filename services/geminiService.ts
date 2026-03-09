@@ -2,9 +2,13 @@ import { GoogleGenAI, Type } from "@google/genai";
 import { AnalysisResult } from "../types";
 
 // Use GEMINI_API_KEY as per guidelines
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY! });
+const apiKey = process.env.GEMINI_API_KEY;
+const ai = apiKey ? new GoogleGenAI({ apiKey }) : null;
 
 export const analyzeLuxuryProduct = async (base64Image: string, productNotes?: string): Promise<AnalysisResult> => {
+  if (!ai) {
+    throw new Error("GEMINI_API_KEY is not configured. Please add it to your environment variables.");
+  }
   const modelName = 'gemini-3-flash-preview';
   
   const prompt = `
