@@ -1,7 +1,18 @@
 
 import React from 'react';
 
-const Footer: React.FC = () => {
+interface FooterProps {
+  setView?: (view: 'landing' | 'auth' | 'about' | 'terms') => void;
+}
+
+const Footer: React.FC<FooterProps> = ({ setView }) => {
+  const handleNav = (v: 'landing' | 'auth' | 'about' | 'terms') => {
+    if (setView) {
+      setView(v);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
   return (
     <footer className="bg-black text-white py-24">
       <div className="max-w-7xl mx-auto px-6">
@@ -9,24 +20,23 @@ const Footer: React.FC = () => {
           <div className="col-span-2">
             <span className="text-2xl font-black tracking-tighter uppercase mb-8 block">GENIFY</span>
             <p className="text-zinc-500 text-sm max-w-xs leading-relaxed">
-              Providing microscopic clarity for the world's most valuable assets. Founded in 2026.
+              Providing fast AI authentication for products using AI. Founded in 2026.
             </p>
           </div>
           
           <div>
             <h5 className="text-[10px] font-black uppercase tracking-widest text-zinc-500 mb-6">Product</h5>
             <div className="flex flex-col gap-4 text-sm font-bold">
-              <a href="#" className="hover:text-zinc-300 transition-colors">How It Works</a>
-              <a href="#" className="hover:text-zinc-300 transition-colors">Pricing</a>
+              <button onClick={() => handleNav('landing')} className="text-left hover:text-zinc-300 transition-colors">How It Works</button>
+              <button onClick={() => handleNav('landing')} className="text-left hover:text-zinc-300 transition-colors">Pricing</button>
             </div>
           </div>
 
           <div>
             <h5 className="text-[10px] font-black uppercase tracking-widest text-zinc-500 mb-6">Company</h5>
             <div className="flex flex-col gap-4 text-sm font-bold">
-              <a href="#" className="hover:text-zinc-300 transition-colors">About Us</a>
-              <a href="#" className="hover:text-zinc-300 transition-colors">Privacy</a>
-              <a href="#" className="hover:text-zinc-300 transition-colors">Terms</a>
+              <button onClick={() => handleNav('about')} className="text-left hover:text-zinc-300 transition-colors">About Us</button>
+              <button onClick={() => handleNav('terms')} className="text-left hover:text-zinc-300 transition-colors">Terms</button>
             </div>
           </div>
         </div>

@@ -134,64 +134,59 @@ const AuthenticationForm: React.FC<AuthenticationFormProps> = ({ onBack, onIniti
 
   return (
     <div className="min-h-screen bg-white text-black p-6 md:p-12 font-sans">
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-5xl mx-auto">
         {/* Header */}
-        <div className="flex items-center gap-8 mb-16">
+        <div className="flex items-center gap-6 mb-20">
           <button 
             onClick={onBack}
-            className="flex items-center gap-2 px-4 py-2 bg-zinc-100 hover:bg-zinc-200 transition-colors text-[10px] font-black uppercase tracking-widest"
+            className="px-4 py-2 bg-zinc-100 hover:bg-zinc-200 transition-colors text-[10px] font-black uppercase tracking-widest border border-zinc-200"
           >
-            <ArrowLeft size={14} />
             Back
           </button>
-          <h1 className="text-4xl md:text-6xl font-black tracking-tighter uppercase">Authentication</h1>
+          <h1 className="text-5xl md:text-7xl font-black tracking-tighter uppercase leading-none">Authentication</h1>
         </div>
 
-        <div className="space-y-8">
+        <div className="space-y-6">
           {/* Batch Code */}
-          <div className="space-y-2">
-            <label className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Batch Code</label>
+          <div className="relative group">
+            <div className="absolute top-6 left-8 text-[10px] font-black uppercase tracking-widest text-zinc-400 z-10">Batch Code</div>
             <input 
               type="text"
               value={batchCode}
               onChange={(e) => setBatchCode(e.target.value)}
-              className="w-full p-6 bg-zinc-50 border-none focus:ring-2 focus:ring-black outline-none transition-all text-lg font-medium"
-              placeholder="Enter batch code if available"
+              className="w-full pt-14 pb-8 px-8 bg-zinc-50 border-none focus:ring-0 outline-none transition-all text-xl font-bold uppercase placeholder:text-zinc-200"
+              placeholder="Enter code"
             />
           </div>
 
           {/* Seller / Source */}
-          <div className="space-y-2">
-            <label className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Seller / Source</label>
+          <div className="relative group">
+            <div className="absolute top-6 left-8 text-[10px] font-black uppercase tracking-widest text-zinc-400 z-10">Seller / Source</div>
             <input 
               type="text"
               value={sellerSource}
               onChange={(e) => setSellerSource(e.target.value)}
-              className="w-full p-6 bg-zinc-50 border-none focus:ring-2 focus:ring-black outline-none transition-all text-lg font-medium"
-              placeholder="Where did you purchase this item?"
+              className="w-full pt-14 pb-8 px-8 bg-zinc-50 border-none focus:ring-0 outline-none transition-all text-xl font-bold uppercase placeholder:text-zinc-200"
+              placeholder="Enter source"
             />
           </div>
 
           {/* Notes */}
-          <div className="space-y-2">
-            <label className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Notes</label>
+          <div className="relative group">
+            <div className="absolute top-6 left-8 text-[10px] font-black uppercase tracking-widest text-zinc-400 z-10">Notes</div>
             <textarea 
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              rows={6}
-              className="w-full p-6 bg-zinc-50 border-none focus:ring-2 focus:ring-black outline-none transition-all text-lg font-medium resize-none"
-              placeholder="Any additional details or concerns..."
+              rows={8}
+              className="w-full pt-14 pb-8 px-8 bg-zinc-50 border-none focus:ring-0 outline-none transition-all text-xl font-bold uppercase resize-none placeholder:text-zinc-200"
+              placeholder="Additional details"
             />
           </div>
 
           {/* Photos */}
-          <div className="pt-8 border-t border-zinc-100">
-            <div className="flex justify-between items-end mb-8">
-              <h2 className="text-sm font-black uppercase tracking-widest">Photos ({photos.length}/12)</h2>
-              <div className="flex items-center gap-2 text-[10px] text-zinc-400 font-bold uppercase">
-                <Info size={12} />
-                First photo is used for primary analysis
-              </div>
+          <div className="pt-12">
+            <div className="flex justify-between items-end mb-8 border-b border-zinc-100 pb-4">
+              <h2 className="text-[10px] font-black uppercase tracking-[0.2em] text-black">Photos ({photos.length}/12)</h2>
             </div>
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -199,11 +194,9 @@ const AuthenticationForm: React.FC<AuthenticationFormProps> = ({ onBack, onIniti
               {photos.length < 12 && (
                 <button 
                   onClick={() => fileInputRef.current?.click()}
-                  className="aspect-[3/4] bg-zinc-50 border-2 border-dashed border-zinc-200 flex flex-col items-center justify-center gap-4 hover:bg-zinc-100 transition-all group"
+                  className="aspect-[3/4] bg-zinc-50 border border-dashed border-zinc-200 flex flex-col items-center justify-center gap-4 hover:bg-zinc-100 transition-all group"
                 >
-                  <div className="w-12 h-12 rounded-full border border-black flex items-center justify-center group-hover:scale-110 transition-transform">
-                    <Plus size={24} />
-                  </div>
+                  <Plus size={32} strokeWidth={1.5} />
                   <span className="text-[10px] font-black uppercase tracking-widest">Add Photo</span>
                 </button>
               )}
@@ -214,16 +207,16 @@ const AuthenticationForm: React.FC<AuthenticationFormProps> = ({ onBack, onIniti
                   <img src={base64} alt={`Upload ${index}`} className="w-full h-full object-cover" />
                   <button 
                     onClick={() => removePhoto(index)}
-                    className="absolute top-2 right-2 p-1 bg-black text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                    className="absolute top-2 right-2 p-2 bg-black text-white rounded-none opacity-0 group-hover:opacity-100 transition-opacity"
                   >
-                    <X size={14} />
+                    <X size={16} />
                   </button>
                 </div>
               ))}
 
-              {/* Empty Slots */}
+              {/* Empty Slots to match the design grid */}
               {Array.from({ length: Math.max(0, 4 - (photos.length + (photos.length < 12 ? 1 : 0))) }).map((_, i) => (
-                <div key={`empty-${i}`} className="aspect-[3/4] bg-zinc-50/50" />
+                <div key={`empty-${i}`} className="aspect-[3/4] bg-zinc-50/30 border border-dashed border-zinc-100" />
               ))}
             </div>
             <input 
@@ -237,19 +230,19 @@ const AuthenticationForm: React.FC<AuthenticationFormProps> = ({ onBack, onIniti
           </div>
 
           {/* Footer Action */}
-          <div className="pt-12 flex justify-end">
+          <div className="pt-20 flex justify-end">
             <button 
               onClick={handleAnalyze}
               disabled={photos.length === 0 || isAnalyzing}
-              className="px-12 py-6 bg-black text-white rounded-none font-black uppercase tracking-widest text-xs hover:bg-zinc-800 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-3"
+              className="px-16 py-6 bg-black text-white rounded-none font-black uppercase tracking-widest text-xs hover:bg-zinc-900 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-4"
             >
               {isAnalyzing ? (
                 <>
                   <Loader2 className="animate-spin" size={16} />
-                  Analyzing with Gemini AI...
+                  Analyzing...
                 </>
               ) : (
-                'Initialize AI Analysis'
+                'Initialize Analysis'
               )}
             </button>
           </div>

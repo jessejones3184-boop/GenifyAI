@@ -2,15 +2,16 @@
 import React, { useState } from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
-import AnalysisTool from './components/AnalysisTool';
 import IntelligenceSection from './components/IntelligenceSection';
 import StatsSection from './components/StatsSection';
 import FAQ from './components/FAQ';
 import Footer from './components/Footer';
 import AuthenticationForm from './components/AuthenticationForm';
+import AboutPage from './components/AboutPage';
+import TermsPage from './components/TermsPage';
 
 const App: React.FC = () => {
-  const [view, setView] = useState<'landing' | 'auth'>('landing');
+  const [view, setView] = useState<'landing' | 'auth' | 'about' | 'terms'>('landing');
   const [selectedPlan, setSelectedPlan] = useState<{ id: string; name: string } | null>(null);
 
   const handleSelectPlan = (priceId: string, planName: string) => {
@@ -50,6 +51,14 @@ const App: React.FC = () => {
     }
   }, []);
 
+  if (view === 'about') {
+    return <AboutPage setView={setView} />;
+  }
+
+  if (view === 'terms') {
+    return <TermsPage setView={setView} />;
+  }
+
   if (view === 'auth' && selectedPlan) {
     return (
       <AuthenticationForm 
@@ -62,23 +71,14 @@ const App: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-white text-black selection:bg-black selection:text-white">
-      <Navbar />
+      <Navbar setView={setView} />
       <main className="flex-grow">
-        <Hero />
-        <div id="demo-tool" className="py-20 bg-white">
-          <div className="max-w-7xl mx-auto px-6">
-            <div className="mb-16 text-center">
-              <span className="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-400 mb-4 block">Interactive Demo</span>
-              <h2 className="text-4xl md:text-5xl font-black tracking-tighter text-black uppercase">Try the AI Engine</h2>
-            </div>
-            <AnalysisTool />
-          </div>
-        </div>
+        <Hero onGetStarted={() => handleSelectPlan('demo', 'Interactive Demo')} />
         <IntelligenceSection />
         <StatsSection onSelectPlan={handleSelectPlan} />
         <FAQ />
       </main>
-      <Footer />
+      <Footer setView={setView} />
     </div>
   );
 };

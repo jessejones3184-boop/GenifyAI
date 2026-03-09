@@ -1,11 +1,35 @@
 
 import React from 'react';
 
-const Navbar: React.FC = () => {
+interface NavbarProps {
+  setView?: (view: 'landing' | 'auth' | 'about' | 'terms') => void;
+}
+
+const Navbar: React.FC<NavbarProps> = ({ setView }) => {
   const scrollToSection = (id: string) => {
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+    if (setView) {
+      setView('landing');
+      // Small delay to allow landing page to render before scrolling
+      setTimeout(() => {
+        const element = document.getElementById(id);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 100);
+    } else {
+      const element = document.getElementById(id);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  };
+
+  const handleHomeClick = () => {
+    if (setView) {
+      setView('landing');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
 
@@ -14,7 +38,7 @@ const Navbar: React.FC = () => {
       <div className="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
         <button 
           className="focus:outline-none" 
-          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          onClick={handleHomeClick}
         >
           <span className="text-2xl font-black tracking-tighter text-black uppercase">GENIFY</span>
         </button>

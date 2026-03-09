@@ -21,7 +21,7 @@ const faqs = [
 ];
 
 const FAQ: React.FC = () => {
-  const [openIndex, setOpenIndex] = useState<number | null>(3); // Default open the last one as in image
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   return (
     <section className="py-32 bg-white">
