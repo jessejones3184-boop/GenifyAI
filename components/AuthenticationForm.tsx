@@ -17,24 +17,7 @@ const AuthenticationForm: React.FC<AuthenticationFormProps> = ({ onBack, onIniti
   const [photos, setPhotos] = useState<string[]>([]);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [result, setResult] = useState<AnalysisResult | null>(null);
-  const [configError, setConfigError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-
-  // Check for API key and free scan limit on mount
-  React.useEffect(() => {
-    const apiKey = process.env.GEMINI_API_KEY || (import.meta as any).env?.VITE_GEMINI_API_KEY;
-    if (!apiKey) {
-      setConfigError("GEMINI_API_KEY is not configured. Please add it to your Netlify environment variables and trigger a new deploy (Clear cache and deploy).");
-    }
-
-    if (planName === 'Interactive Demo') {
-      const freeScansUsed = localStorage.getItem('genify_free_scans_used');
-      if (freeScansUsed && parseInt(freeScansUsed) >= 1) {
-        alert("You have already used your one free authentication. Please purchase a plan to continue.");
-        onBack();
-      }
-    }
-  }, [planName, onBack]);
 
   const handleAddPhoto = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -66,16 +49,6 @@ const AuthenticationForm: React.FC<AuthenticationFormProps> = ({ onBack, onIniti
 
   const handleAnalyze = async () => {
     if (photos.length === 0) return;
-
-    // Check for free scan limit
-    if (planName === 'Interactive Demo') {
-      const freeScansUsed = localStorage.getItem('genify_free_scans_used');
-      if (freeScansUsed && parseInt(freeScansUsed) >= 1) {
-        alert("You have already used your one free authentication. Please purchase a plan to continue.");
-        onBack();
-        return;
-      }
-    }
     
     setIsAnalyzing(true);
     setResult(null);
@@ -83,14 +56,8 @@ const AuthenticationForm: React.FC<AuthenticationFormProps> = ({ onBack, onIniti
     try {
       // For simplicity, we analyze the first photo as the primary reference
       // In a more advanced version, we could send multiple parts to Gemini
-      const analysisResult = await analyzeLuxuryProduct(photos[0], `Batch Code: ${batchCode}\n${notes}`);
+      const analysisResult = await analyzeLuxuryProduct(photos[0], notes);
       setResult(analysisResult);
-
-      // Increment free scan count if applicable
-      if (planName === 'Interactive Demo') {
-        const currentCount = parseInt(localStorage.getItem('genify_free_scans_used') || '0');
-        localStorage.setItem('genify_free_scans_used', (currentCount + 1).toString());
-      }
     } catch (error: any) {
       alert(error.message);
     } finally {
@@ -169,7 +136,7 @@ const AuthenticationForm: React.FC<AuthenticationFormProps> = ({ onBack, onIniti
     <div className="min-h-screen bg-white text-black p-6 md:p-12 font-sans">
       <div className="max-w-5xl mx-auto">
         {/* Header */}
-        <div className="flex items-center gap-6 mb-12">
+        <div className="flex items-center gap-6 mb-20">
           <button 
             onClick={onBack}
             className="px-4 py-2 bg-zinc-100 hover:bg-zinc-200 transition-colors text-[10px] font-black uppercase tracking-widest border border-zinc-200"
@@ -178,18 +145,6 @@ const AuthenticationForm: React.FC<AuthenticationFormProps> = ({ onBack, onIniti
           </button>
           <h1 className="text-5xl md:text-7xl font-black tracking-tighter uppercase leading-none">Authentication</h1>
         </div>
-
-        {configError && (
-          <div className="mb-12 p-8 bg-red-50 border-l-4 border-red-600 flex items-start gap-6">
-            <ShieldAlert className="text-red-600 shrink-0" size={32} />
-            <div>
-              <h3 className="text-lg font-black uppercase tracking-tight text-red-600 mb-2">Configuration Error</h3>
-              <p className="text-sm font-medium text-red-700 leading-relaxed">
-                {configError}
-              </p>
-            </div>
-          </div>
-        )}
 
         <div className="space-y-6">
           {/* Batch Code */}
