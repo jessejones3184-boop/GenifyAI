@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 const faqs = [
   {
     question: "How accurate is Genify?",
-    answer: "Genify uses state of the art neural networks trained on millions of authentic and counterfeit luxury goods. Our forensic accuracy exceeds 99.8% for supported brands."
+    answer: "Genify uses state-of-the-art neural networks trained on millions of authentic and counterfeit luxury goods. Our forensic accuracy exceeds 99.8% for supported brands."
   },
   {
     question: "What luxury brands are supported?",
@@ -16,7 +16,7 @@ const faqs = [
   },
   {
     question: "Does every authentication come with a digital certificate?",
-    answer: "Yes, every Genify authentication (except for our free demo) generates a tamper proof digital certificate that serves as a comprehensive technical audit of your asset."
+    answer: "Yes, every Genify authentication (except for our free demo) generates a tamper-proof digital certificate that serves as a comprehensive technical audit of your asset."
   }
 ];
 

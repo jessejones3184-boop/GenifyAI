@@ -43,7 +43,7 @@ const ThreatVisual: React.FC = () => {
                   </svg>
                  </div>
                  <div className="flex flex-col">
-                    <span className="text-lg font-bold text-black uppercase tracking-tight">Sub 100ms Latency</span>
+                    <span className="text-lg font-bold text-black uppercase tracking-tight">Sub-100ms Latency</span>
                     <span className="text-[10px] text-zinc-400 font-mono tracking-widest uppercase">Throughput: 4.2k req/sec</span>
                  </div>
               </div>

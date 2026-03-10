@@ -23,7 +23,7 @@ const Hero: React.FC<HeroProps> = ({ onGetStarted }) => {
         </h1>
         
         <p className="text-zinc-400 text-xl md:text-2xl max-w-2xl mx-auto mb-12 font-medium leading-relaxed">
-          Industry Leading authentication. Only $2.99 per scan. <br className="hidden md:block" />
+          Industry-leading forensic accuracy. Only $2.99 per scan. <br className="hidden md:block" />
           Trusted by the world's leading collectors.
         </p>
         
