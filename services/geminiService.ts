@@ -8,7 +8,7 @@ const getAi = () => {
   if (!aiInstance) {
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {
-      throw new Error("GEMINI_API_KEY is not configured. Please add it to your environment variables in your deployment dashboard (e.g., Netlify) and RE-DEPLOY your site.");
+      throw new Error("GEMINI_API_KEY is not configured. Please add it to your environment variables in your deployment dashboard (e.g., Netlify) and REDEPLOY your site.");
     }
     aiInstance = new GoogleGenAI({ apiKey });
   }
@@ -21,7 +21,7 @@ export const analyzeLuxuryProduct = async (base64Image: string, productNotes?: s
   
   const prompt = `
     You are a Senior Luxury Authentication Expert at Genify.
-    Your objective is to perform a high-precision audit on the provided image to identify if the luxury item (handbag, watch, sneaker, etc.) is authentic or a counterfeit/replica.
+    Your objective is to perform a high precision audit on the provided image to identify if the luxury item (handbag, watch, sneaker, etc.) is authentic or a counterfeit/replica.
     
     ${productNotes ? `User Notes: ${productNotes}` : ''}
 
@@ -31,7 +31,7 @@ export const analyzeLuxuryProduct = async (base64Image: string, productNotes?: s
     3. Construction: Look for structural integrity, edge paint quality, and alignment of patterns.
     4. Optical Reality: Verify if the item's details match the known standards of the specific luxury brand.
 
-    Analyze with the precision required for high-end collectors.
+    Analyze with the precision required for high end collectors.
     Respond ONLY in a structured JSON format according to this schema.
   `;
 
