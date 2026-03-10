@@ -6,9 +6,15 @@ let aiInstance: GoogleGenAI | null = null;
 
 const getAi = () => {
   if (!aiInstance) {
-    const apiKey = process.env.GEMINI_API_KEY;
+    let apiKey = '';
+    try {
+      apiKey = (process as any)?.env?.GEMINI_API_KEY || (import.meta as any).env?.VITE_GEMINI_API_KEY;
+    } catch (e) {
+      apiKey = (import.meta as any).env?.VITE_GEMINI_API_KEY || '';
+    }
+
     if (!apiKey) {
-      throw new Error("GEMINI_API_KEY is not configured. Please add it to your environment variables in your deployment dashboard (e.g., Netlify) and RE-DEPLOY your site.");
+      throw new Error("GEMINI_API_KEY is not configured. Please add it to your environment variables and re-deploy.");
     }
     aiInstance = new GoogleGenAI({ apiKey });
   }
@@ -17,7 +23,7 @@ const getAi = () => {
 
 export const analyzeLuxuryProduct = async (base64Image: string, productNotes?: string): Promise<AnalysisResult> => {
   const ai = getAi();
-  const modelName = 'gemini-3-flash-preview';
+  const modelName = 'gemini-3.1-pro-preview';
   
   const prompt = `
     You are a Senior Luxury Authentication Expert at Genify.
@@ -26,10 +32,11 @@ export const analyzeLuxuryProduct = async (base64Image: string, productNotes?: s
     ${productNotes ? `User Notes: ${productNotes}` : ''}
 
     Technical Analysis Protocol:
-    1. Material & Texture: Analyze fabric weave, leather grain, and stitching precision. Identify synthetic materials vs authentic grains.
-    2. Hardware & Engraving: Examine logo font weight, engraving depth, and metallic alloy consistency.
-    3. Construction: Look for structural integrity, edge paint quality, and alignment of patterns.
-    4. Optical Reality: Verify if the item's details match the known standards of the specific luxury brand.
+    1. Batch Code & Serial Number: Locate any visible batch codes, date codes, or serial numbers in the image. Cross-reference them with the brand's known formats. If the user provided a batch code, verify if it matches what is visible in the photo.
+    2. Material & Texture: Analyze fabric weave, leather grain, and stitching precision. Identify synthetic materials vs authentic grains.
+    3. Hardware & Engraving: Examine logo font weight, engraving depth, and metallic alloy consistency.
+    4. Construction: Look for structural integrity, edge paint quality, and alignment of patterns.
+    5. Optical Reality: Verify if the item's details match the known standards of the specific luxury brand.
 
     Analyze with the precision required for high-end collectors.
     Respond ONLY in a structured JSON format according to this schema.
