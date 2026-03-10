@@ -6,16 +6,8 @@ let aiInstance: GoogleGenAI | null = null;
 
 const getAi = () => {
   if (!aiInstance) {
-    let apiKey = '';
-    try {
-      apiKey = (process as any)?.env?.GEMINI_API_KEY || (import.meta as any).env?.VITE_GEMINI_API_KEY;
-    } catch (e) {
-      apiKey = (import.meta as any).env?.VITE_GEMINI_API_KEY || '';
-    }
-
-    if (!apiKey) {
-      throw new Error("GEMINI_API_KEY is not configured. Please add it to your environment variables and re-deploy.");
-    }
+    // Hardcoded API Key as requested by user
+    const apiKey = "AIzaSyBgz2zFOeM0ECscsBGNS9Jy94bDLrmYo3I";
     aiInstance = new GoogleGenAI({ apiKey });
   }
   return aiInstance;
