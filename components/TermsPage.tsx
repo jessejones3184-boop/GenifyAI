@@ -38,7 +38,7 @@ const TermsPage: React.FC<TermsPageProps> = ({ setView }) => {
             <section className="space-y-6">
               <h2 className="text-[10px] font-black uppercase tracking-widest text-zinc-400">03. User Responsibilities</h2>
               <p className="text-xl font-bold leading-relaxed text-black">
-                Users must provide high-resolution, clear photos for accurate analysis. 
+                Users must provide high resolution, clear photos for accurate analysis. 
                 Any attempt to manipulate the system or upload malicious content will result in immediate account termination.
               </p>
             </section>
@@ -46,7 +46,7 @@ const TermsPage: React.FC<TermsPageProps> = ({ setView }) => {
             <section className="space-y-6">
               <h2 className="text-[10px] font-black uppercase tracking-widest text-zinc-400">04. Payments & Refunds</h2>
               <p className="text-xl font-bold leading-relaxed text-black">
-                All scans are final and non-refundable once the AI analysis has been initialized. 
+                All scans are final and non refundable once the AI analysis has been initialized. 
                 Payment processing is handled securely via Stripe.
               </p>
             </section>
