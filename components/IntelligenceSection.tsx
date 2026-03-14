@@ -16,7 +16,7 @@ const chartData = [
 
 const IntelligenceSection: React.FC = () => {
   return (
-    <section id="process" className="py-32 bg-white">
+    <section id="process" className="pt-64 pb-32 bg-white">
       <div className="max-w-7xl mx-auto px-6">
         <h2 className="text-4xl font-black tracking-tighter mb-16 text-black">How the AI detects</h2>
         

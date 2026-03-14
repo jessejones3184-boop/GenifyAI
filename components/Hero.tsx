@@ -14,16 +14,14 @@ const Hero: React.FC<HeroProps> = ({ onGetStarted }) => {
   };
 
   return (
-    <div className="relative pt-44 pb-32 flex flex-col items-center text-center px-6 bg-white">
+    <div className="relative pt-44 pb-64 flex flex-col items-center justify-center text-center px-6 bg-white min-h-[80vh]">
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-6xl md:text-8xl font-black tracking-tighter mb-8 leading-[0.9] text-black uppercase">
-          99.8 percent <br />
-          tested <br />
-          ai detection.
+        <h1 className="text-4xl md:text-6xl font-black tracking-tighter mb-8 leading-tight text-black uppercase">
+          What will you detect today?
         </h1>
         
         <p className="text-zinc-400 text-xl md:text-2xl max-w-2xl mx-auto mb-12 font-medium leading-relaxed">
-          Industry Leading authentication. Only $2.99 per scan. <br className="hidden md:block" />
+          Industry Leading authentication powered by AI. <br className="hidden md:block" />
           Trusted by the world's leading collectors.
         </p>
         
