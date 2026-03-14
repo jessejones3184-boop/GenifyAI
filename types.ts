@@ -9,6 +9,9 @@ export interface AnalysisResult {
   }[];
   verdict: string;
   forensicReport: string;
+  materialAnalysis?: string;
+  batchCodeVerification?: string;
+  sources?: { title: string; url: string }[];
 }
 
 export enum DetectionMethod {

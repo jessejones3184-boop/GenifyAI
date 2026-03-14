@@ -9,6 +9,7 @@ const AnalysisTool: React.FC = () => {
   const [result, setResult] = useState<AnalysisResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [progress, setProgress] = useState(0);
+  const [productNotes, setProductNotes] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -36,7 +37,7 @@ const AnalysisTool: React.FC = () => {
         });
       }, 300);
 
-      const analysis = await analyzeLuxuryProduct(preview);
+      const analysis = await analyzeLuxuryProduct(preview, productNotes);
       
       clearInterval(timer);
       setProgress(100);
@@ -75,9 +76,18 @@ const AnalysisTool: React.FC = () => {
               </svg>
             </div>
             <h3 className="text-2xl font-black text-black mb-2 tracking-tighter uppercase">Upload Asset</h3>
-            <p className="text-zinc-400 text-[10px] font-black uppercase tracking-widest">
+            <p className="text-zinc-400 text-[10px] font-black uppercase tracking-widest mb-6">
               High resolution forensic input
             </p>
+            <div className="w-full max-w-md px-4" onClick={(e) => e.stopPropagation()}>
+              <input 
+                type="text"
+                placeholder="ENTER SERIAL / BATCH CODE (OPTIONAL)"
+                value={productNotes}
+                onChange={(e) => setProductNotes(e.target.value)}
+                className="w-full bg-white border border-zinc-200 px-4 py-3 text-[10px] font-black uppercase tracking-widest focus:outline-none focus:border-black transition-all"
+              />
+            </div>
           </div>
         ) : (
           <div className="space-y-12">
@@ -135,6 +145,42 @@ const AnalysisTool: React.FC = () => {
                         <p className="text-[10px] font-black uppercase tracking-widest text-zinc-400 mb-4">Expert Verdict</p>
                         <p className="text-black text-lg font-bold leading-tight uppercase">"{result.verdict}"</p>
                       </div>
+
+                      {result.detections && result.detections.length > 0 && (
+                        <div className="pt-8 border-t border-zinc-200">
+                          <p className="text-[10px] font-black uppercase tracking-widest text-zinc-400 mb-4">Key Observations</p>
+                          <div className="space-y-4">
+                            {result.detections.map((det, idx) => (
+                              <div key={idx} className="flex gap-4">
+                                <div className={`w-1 shrink-0 ${det.severity === 'high' ? 'bg-red-600' : det.severity === 'medium' ? 'bg-orange-500' : 'bg-zinc-400'}`}></div>
+                                <div>
+                                  <p className="text-[10px] font-black uppercase tracking-tight text-black">{det.type}</p>
+                                  <p className="text-[10px] text-zinc-500 leading-relaxed">{det.description}</p>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {result.sources && result.sources.length > 0 && (
+                        <div className="pt-8 border-t border-zinc-200">
+                          <p className="text-[10px] font-black uppercase tracking-widest text-zinc-400 mb-4">Verification Sources</p>
+                          <div className="flex flex-wrap gap-2">
+                            {result.sources.map((source, idx) => (
+                              <a 
+                                key={idx} 
+                                href={source.url} 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                className="text-[8px] font-black uppercase tracking-widest bg-zinc-200 px-2 py-1 hover:bg-black hover:text-white transition-all"
+                              >
+                                {source.title.length > 20 ? source.title.substring(0, 20) + '...' : source.title}
+                              </a>
+                            ))}
+                          </div>
+                        </div>
+                      )}
                       
                       <div className="pt-8 border-t border-zinc-200">
                         <button 
@@ -163,6 +209,28 @@ const AnalysisTool: React.FC = () => {
                 )}
               </div>
             </div>
+
+            {result && (
+              <div className="grid md:grid-cols-2 gap-8 mt-12">
+                <div className="p-10 bg-zinc-50 border border-zinc-100 animate-in fade-in slide-in-from-bottom-8 duration-700">
+                  <p className="text-[10px] font-black uppercase tracking-widest text-zinc-400 mb-6">Material Analysis</p>
+                  <p className="text-xs font-bold text-black leading-relaxed uppercase">{result.materialAnalysis}</p>
+                </div>
+                <div className="p-10 bg-zinc-50 border border-zinc-100 animate-in fade-in slide-in-from-bottom-8 duration-700 delay-100">
+                  <p className="text-[10px] font-black uppercase tracking-widest text-zinc-400 mb-6">Batch Code Verification</p>
+                  <p className="text-xs font-bold text-black leading-relaxed uppercase">{result.batchCodeVerification}</p>
+                </div>
+              </div>
+            )}
+
+            {result && (
+              <div className="mt-12 p-12 bg-zinc-50 border border-zinc-100 animate-in fade-in slide-in-from-bottom-8 duration-700">
+                <p className="text-[10px] font-black uppercase tracking-widest text-zinc-400 mb-8">Full Forensic Report</p>
+                <div className="prose prose-sm max-w-none text-black font-mono text-xs leading-relaxed whitespace-pre-wrap">
+                  {result.forensicReport}
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>

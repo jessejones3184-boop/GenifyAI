@@ -24,13 +24,13 @@ export const analyzeLuxuryProduct = async (base64Image: string, productNotes?: s
     ${productNotes ? `User Notes: ${productNotes}` : ''}
 
     Technical Analysis Protocol:
-    1. Batch Code & Serial Number: Locate any visible batch codes, date codes, or serial numbers in the image. Cross-reference them with the brand's known formats. If the user provided a batch code, verify if it matches what is visible in the photo.
-    2. Material & Texture: Analyze fabric weave, leather grain, and stitching precision. Identify synthetic materials vs authentic grains.
-    3. Hardware & Engraving: Examine logo font weight, engraving depth, and metallic alloy consistency.
-    4. Construction: Look for structural integrity, edge paint quality, and alignment of patterns.
-    5. Optical Reality: Verify if the item's details match the known standards of the specific luxury brand.
+    1. Google Search Grounding: Use Google Search to research the specific item model. Look for "real vs fake" guides for this specific brand and model. Compare the item in the image with known authentic and counterfeit markers found in these guides.
+    2. Batch Code & Serial Number Verification: Identify any batch codes, date codes, or serial numbers. Use Google Search to verify if these codes follow the brand's authentic patterns or if they are known "common fake" codes used by counterfeiters. Check multiple authentication databases if possible.
+    3. Material & Texture Comparison: Analyze the material (leather grain, canvas weave, hardware metal) and compare it with the standards of authentic pieces found via search. Look for "plasticity", "chemical sheen", or incorrect grain patterns common in fakes.
+    4. Hardware & Engraving: Examine logo font, engraving depth, and metallic alloy consistency against authentic reference images.
+    5. Construction: Look for structural integrity, edge paint quality, and alignment of patterns.
 
-    Analyze with the precision required for high-end collectors.
+    Analyze with the precision required for high-end collectors. Compare findings with known authentic and counterfeit indicators found online.
     Respond ONLY in a structured JSON format according to this schema.
   `;
 
@@ -44,6 +44,7 @@ export const analyzeLuxuryProduct = async (base64Image: string, productNotes?: s
         ]
       },
       config: {
+        tools: [{ googleSearch: {} }],
         responseMimeType: "application/json",
         responseSchema: {
           type: Type.OBJECT,
@@ -63,15 +64,32 @@ export const analyzeLuxuryProduct = async (base64Image: string, productNotes?: s
               }
             },
             verdict: { type: Type.STRING, description: 'Concise executive summary of the findings (Authentic vs Counterfeit)' },
-            forensicReport: { type: Type.STRING, description: 'Full technical breakdown of the authentication process' }
+            forensicReport: { type: Type.STRING, description: 'Full technical breakdown of the authentication process including search findings' },
+            materialAnalysis: { type: Type.STRING, description: 'Detailed analysis of materials, textures, and finishes compared to authentic standards' },
+            batchCodeVerification: { type: Type.STRING, description: 'Results of serial number or date code verification against known databases and patterns' }
           },
-          required: ['isAI', 'confidence', 'detections', 'verdict', 'forensicReport']
+          required: ['isAI', 'confidence', 'detections', 'verdict', 'forensicReport', 'materialAnalysis', 'batchCodeVerification']
         }
       }
     });
 
     const result = JSON.parse(response.text);
-    return result;
+    
+    // Extract search sources if available
+    const sources: { title: string; url: string }[] = [];
+    const groundingMetadata = response.candidates?.[0]?.groundingMetadata;
+    if (groundingMetadata?.groundingChunks) {
+      groundingMetadata.groundingChunks.forEach((chunk: any) => {
+        if (chunk.web) {
+          sources.push({
+            title: chunk.web.title,
+            url: chunk.web.uri
+          });
+        }
+      });
+    }
+
+    return { ...result, sources };
   } catch (error) {
     console.error("Luxury Authentication Pipeline Error:", error);
     throw new Error("Authentication analysis failed. The image may be unclear or the service is temporarily unavailable.");
