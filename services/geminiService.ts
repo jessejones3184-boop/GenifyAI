@@ -6,35 +6,37 @@ let aiInstance: GoogleGenAI | null = null;
 
 const getAi = () => {
   if (!aiInstance) {
-    // Hardcoded API Key as requested by user
-    const apiKey = "AIzaSyBgz2zFOeM0ECscsBGNS9Jy94bDLrmYo3I";
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+      throw new Error("GEMINI_API_KEY is not configured. Please add it in the settings.");
+    }
     aiInstance = new GoogleGenAI({ apiKey });
   }
   return aiInstance;
 };
 
 export const analyzeLuxuryProduct = async (base64Image: string, productNotes?: string): Promise<AnalysisResult> => {
-  const ai = getAi();
-  const modelName = 'gemini-3.1-pro-preview';
-  
-  const prompt = `
-    You are a Senior Luxury Authentication Expert at Genify.
-    Your objective is to perform a high-precision audit on the provided image to identify if the luxury item (handbag, watch, sneaker, etc.) is authentic or a counterfeit/replica.
-    
-    ${productNotes ? `User Notes: ${productNotes}` : ''}
-
-    Technical Analysis Protocol:
-    1. Google Search Grounding: Use Google Search to research the specific item model. Look for "real vs fake" guides for this specific brand and model. Compare the item in the image with known authentic and counterfeit markers found in these guides.
-    2. Batch Code & Serial Number Verification: Identify any batch codes, date codes, or serial numbers. Use Google Search to verify if these codes follow the brand's authentic patterns or if they are known "common fake" codes used by counterfeiters. Check multiple authentication databases if possible.
-    3. Material & Texture Comparison: Analyze the material (leather grain, canvas weave, hardware metal) and compare it with the standards of authentic pieces found via search. Look for "plasticity", "chemical sheen", or incorrect grain patterns common in fakes.
-    4. Hardware & Engraving: Examine logo font, engraving depth, and metallic alloy consistency against authentic reference images.
-    5. Construction: Look for structural integrity, edge paint quality, and alignment of patterns.
-
-    Analyze with the precision required for high-end collectors. Compare findings with known authentic and counterfeit indicators found online.
-    Respond ONLY in a structured JSON format according to this schema.
-  `;
-
   try {
+    const ai = getAi();
+    const modelName = 'gemini-3.1-pro-preview';
+    
+    const prompt = `
+      You are a Senior Luxury Authentication Expert at Genify.
+      Your objective is to perform a high-precision audit on the provided image to identify if the luxury item (handbag, watch, sneaker, etc.) is authentic or a counterfeit/replica.
+      
+      ${productNotes ? `User Notes: ${productNotes}` : ''}
+
+      Technical Analysis Protocol:
+      1. Google Search Grounding: Use Google Search to research the specific item model. Look for "real vs fake" guides for this specific brand and model. Compare the item in the image with known authentic and counterfeit markers found in these guides.
+      2. Batch Code & Serial Number Verification: Identify any batch codes, date codes, or serial numbers. Use Google Search to verify if these codes follow the brand's authentic patterns or if they are known "common fake" codes used by counterfeiters. Check multiple authentication databases if possible.
+      3. Material & Texture Comparison: Analyze the material (leather grain, canvas weave, hardware metal) and compare it with the standards of authentic pieces found via search. Look for "plasticity", "chemical sheen", or incorrect grain patterns common in fakes.
+      4. Hardware & Engraving: Examine logo font, engraving depth, and metallic alloy consistency against authentic reference images.
+      5. Construction: Look for structural integrity, edge paint quality, and alignment of patterns.
+
+      Analyze with the precision required for high-end collectors. Compare findings with known authentic and counterfeit indicators found online.
+      Respond ONLY in a structured JSON format according to this schema.
+    `;
+
     const response = await ai.models.generateContent({
       model: modelName,
       contents: {
@@ -73,6 +75,10 @@ export const analyzeLuxuryProduct = async (base64Image: string, productNotes?: s
       }
     });
 
+    if (!response.text) {
+      throw new Error("Empty response from AI model.");
+    }
+
     const result = JSON.parse(response.text);
     
     // Extract search sources if available
@@ -90,8 +96,21 @@ export const analyzeLuxuryProduct = async (base64Image: string, productNotes?: s
     }
 
     return { ...result, sources };
-  } catch (error) {
+  } catch (error: any) {
     console.error("Luxury Authentication Pipeline Error:", error);
-    throw new Error("Authentication analysis failed. The image may be unclear or the service is temporarily unavailable.");
+    
+    // Provide more specific error messages if possible
+    let userMessage = "Authentication analysis failed.";
+    if (error.message?.includes("API_KEY")) {
+      userMessage = "Gemini API key is missing or invalid. Please check your settings.";
+    } else if (error.message?.includes("quota")) {
+      userMessage = "API quota exceeded. Please try again later.";
+    } else if (error.message?.includes("safety")) {
+      userMessage = "The image was flagged by safety filters. Please try a different photo.";
+    } else {
+      userMessage = `Error: ${error.message || "The service is temporarily unavailable."}`;
+    }
+    
+    throw new Error(userMessage);
   }
 };
