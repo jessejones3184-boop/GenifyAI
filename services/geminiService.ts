@@ -1,7 +1,7 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { AnalysisResult } from "../types";
 
-// Use GEMINI_API_KEY as per guidelines
+// Use GEMINI_API_KEY environment variable. The system automatically provides this.
 let aiInstance: GoogleGenAI | null = null;
 
 const getAi = () => {
