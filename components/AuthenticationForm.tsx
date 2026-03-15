@@ -174,6 +174,18 @@ const AuthenticationForm: React.FC<AuthenticationFormProps> = ({ onBack, onIniti
           <h1 className="text-5xl md:text-7xl font-black tracking-tighter uppercase leading-none">Authentication</h1>
         </div>
 
+        {planName === 'Paid Authentication' && (
+          <div className="mb-12 p-8 bg-emerald-50 border-l-4 border-emerald-600 flex items-start gap-6">
+            <ShieldCheck className="text-emerald-600 shrink-0" size={32} />
+            <div>
+              <h3 className="text-lg font-black uppercase tracking-tight text-emerald-600 mb-2">Payment Successful</h3>
+              <p className="text-sm font-medium text-emerald-700 leading-relaxed">
+                Your account has been credited. You can now proceed with your high-precision forensic authentication.
+              </p>
+            </div>
+          </div>
+        )}
+
         {configError && (
           <div className="mb-12 p-8 bg-red-50 border-l-4 border-red-600 flex items-start gap-6">
             <ShieldAlert className="text-red-600 shrink-0" size={32} />
