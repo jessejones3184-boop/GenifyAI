@@ -6,12 +6,10 @@ let aiInstance: GoogleGenAI | null = null;
 
 const getAi = () => {
   if (!aiInstance) {
-    // Primary: Use platform environment variable
-    // Fallback: Use the key provided for GitHub export
-    const apiKey = process.env.GEMINI_API_KEY || "AIzaSyDjhd1mJvyzqwYJKxIuzmV1XvhzVvAUe6w";
+    const apiKey = process.env.GEMINI_API_KEY;
     
     if (!apiKey) {
-      throw new Error("GEMINI_API_KEY is not configured.");
+      throw new Error("GEMINI_API_KEY is not configured. Please add it to your environment variables.");
     }
     aiInstance = new GoogleGenAI({ apiKey });
   }
